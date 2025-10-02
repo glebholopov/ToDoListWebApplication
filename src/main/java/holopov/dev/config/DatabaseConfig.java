@@ -1,10 +1,10 @@
 package holopov.dev.config;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -32,6 +32,18 @@ public class DatabaseConfig {
     @Value("${db.password}")
     private String databasePassword;
 
+    @Value("${db.connection-pool.initial-size}")
+    private int databaseConnectionPoolInitialSize;
+
+    @Value("${db.connection-pool.min-idle}")
+    private int databaseConnectionPoolMinIdle;
+
+    @Value("${db.connection-pool.max-idle}")
+    private int databaseConnectionPoolMaxIdle;
+
+    @Value("${db.connection-pool.max-total}")
+    private int databaseConnectionPoolMaxTotal;
+
     @Value("${hibernate.dialect}")
     private String hibernateDialect;
 
@@ -43,11 +55,17 @@ public class DatabaseConfig {
 
     @Bean
     public DataSource DataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(databaseDriver);
         dataSource.setUrl(databaseUrl);
         dataSource.setUsername(databaseUsername);
         dataSource.setPassword(databasePassword);
+
+        dataSource.setInitialSize(databaseConnectionPoolInitialSize);
+        dataSource.setMinIdle(databaseConnectionPoolMinIdle);
+        dataSource.setMaxIdle(databaseConnectionPoolMaxIdle);
+        dataSource.setMaxTotal(databaseConnectionPoolMaxTotal);
+
         return dataSource;
     }
 

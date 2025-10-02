@@ -3,7 +3,6 @@ package holopov.dev.dao;
 import holopov.dev.entity.RecordStatus;
 import org.springframework.stereotype.Repository;
 import holopov.dev.entity.Record;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,13 +10,11 @@ import javax.persistence.Query;
 import java.util.List;
 
 @Repository
-@Transactional
 public class RecordDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional(readOnly = true)
     public List<Record> findAllRecords() {
         Query query = entityManager.createQuery("SELECT r FROM Record r ORDER BY r.id ASC");
         List<Record> records = query.getResultList();
